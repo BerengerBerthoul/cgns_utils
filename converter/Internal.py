@@ -6,8 +6,8 @@ except: pass
 
 import numpy
 import fnmatch # unix wildcards
-import KCore.kcore as KCore
-from . import converter
+# import KCore.kcore as KCore
+# from . import converter
 
 # Containeurs
 __GridCoordinates__ = 'GridCoordinates'

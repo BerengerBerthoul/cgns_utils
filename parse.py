@@ -80,7 +80,7 @@ def getNodesFromName(t, name):
 
 """
 
-with open("Converter/Internal.py", "r") as f:
+with open("converter/Internal.py", "r") as f:
   body = f.read()
 # print(f"body : {body}")
 
@@ -131,7 +131,7 @@ for k,v in results.items():
     add_results[k.replace('type', 'label')] = results[k]
 
 size_word = max([len(w) for w in results.keys()])
-with open("Converter/internal.py", "w") as f:
+with open("converter/internal.py", "w") as f:
   f.write(f"from .Internal   import *\n")
   f.write(f"from .additional import *\n\n")
   for k, v in results.items():

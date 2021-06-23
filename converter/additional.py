@@ -163,6 +163,10 @@ MAXDEPTH = 10
 
 # --------------------------------------------------------------------------
 def create_functions(function, create_function, method, funcs, mesg):
+  """
+  Function generator for derivate of requestChildFromPredicate, getChildFromPredicate and getChildrenFromPredicate
+  NB: it also generate snake case version
+  """
   snake_name = PYU.camel_to_snake(function.__name__)
   prefix = function.__name__.replace('Predicate', '')
   # print(f"function          : {function}")
@@ -410,6 +414,7 @@ def create_get_all_children(predicate, nargs, args):
     return getChildrenFromPredicate(parent, partial(predicate, **pkwargs), **kwargs)
   return _get_all_children_from
 
+# Function generator for derivative functions from getChildFromPredicate with labels
 for label in filter(lambda i : i not in ['CGNSTree_t'], CGL.__members__):
   suffix = label[:-2]
   suffix = suffix.replace('CGNS', '')
@@ -479,6 +484,9 @@ for label in filter(lambda i : i not in ['CGNSTree_t'], CGL.__members__):
 
 # --------------------------------------------------------------------------
 def create_functions_name(create_function, name):
+  """
+    Function generator for derivative functions from getChildFromPredicate with CGNS names
+  """
   snake_name = PYU.camel_to_snake(name)
 
   # Generate getAcoustic, ..., getCoordinateX, ..., getZoneSubRegionPointers
