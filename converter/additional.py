@@ -1,4 +1,5 @@
-from typing import List, Tuple
+from typing import List, Optional, NoReturn, Union, Tuple, Callable, Any
+
 from functools import wraps
 from functools import partial
 import sys
@@ -11,6 +12,8 @@ import maia.sids.cgns_keywords as CGK
 import maia.utils.py_utils as PYU
 
 module_object = sys.modules[__name__]
+
+TreeNode = List[Union[str, Optional[np.ndarray], List["TreeNode"]]]
 
 # --------------------------------------------------------------------------
 class CGNSNodeFromPredicateNotFoundError(Exception):
@@ -103,7 +106,7 @@ def check_label(label):
   raise TypeError(f"Invalid Python/CGNS label '{label}'")
 
 # --------------------------------------------------------------------------
-def is_valid_cgns_node(node):
+def is_valid_cgns_node(node: TreeNode):
     if not isinstance(node, list) and len(node) != 4 and \
        is_valid_name(I.getName(node))         and \
        is_valid_value(I.getValue(node))       and \
@@ -126,6 +129,16 @@ def check_is_label(label):
         return f(*args, **kwargs)
       return wrapped_method
   return _check_is_label
+
+# --------------------------------------------------------------------------
+def is_same_name(n0: TreeNode, n1: TreeNode):
+  return n0[0] == n1[0]
+
+def is_same_label(n0: TreeNode, n1: TreeNode):
+  return n0[3] == n1[3]
+
+def is_same_value(n0: TreeNode, n1: TreeNode):
+  return np.array_equal(n0[1], n1[1])
 
 # --------------------------------------------------------------------------
 def match_name(n, name: str):

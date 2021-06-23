@@ -103,8 +103,10 @@ pcc = r"(?<=\^|[\^_a-zA-Z])_*[a-z]+[_a-zA-Z]*"
 results = {}
 for (token, start, end) in var_def.scanString(body):
   if token.funcname:
+    print(f"token.funcname = {token.funcname}")
     funcname = str(token.funcname)
-    if funcname in found_in_doc and not funcname.endswith('__'):
+    # if funcname in found_in_doc and not funcname.endswith('__'):
+    if not funcname.endswith('__'):
       m = re.search(pcc, funcname)
       if m:
         snake_funcname = camel_to_snake(funcname)
@@ -114,11 +116,11 @@ print(f"results : {results}")
 
 # Add
 additional = {
-'is_cgns_tree'  : 'is_top_tree',
+# 'is_cgns_tree'  : 'is_top_tree',
 'is_child_of'   : 'is_child',
-'is_same_label' : 'is_type',
-'is_same_name'  : 'is_name',
-'is_same_value' : 'is_value',
+# 'is_same_label' : 'is_type',
+# 'is_same_name'  : 'is_name',
+# 'is_same_value' : 'is_value',
 }
 for k,v in additional.items():
   results[k] = results[v]
@@ -130,15 +132,16 @@ for k,v in results.items():
     print(f"Found type in = {k}")
     add_results[k.replace('type', 'label')] = results[k]
 
-size_word = max([len(w) for w in results.keys()])
+size_snake_word = max([len(w) for w in results.keys()])
+size_camel_word = max([len(w) for w in results.values()])
 with open("converter/internal.py", "w") as f:
-  f.write(f"from .Internal   import *\n")
+  f.write(f"from . import Internal as I\n")
   f.write(f"from .additional import *\n\n")
   for k, v in results.items():
-    if v not in add_results.values(): # remove all ..._type method(s)
-      f.write(f"{k.ljust(size_word)} = {v}\n")
+    if v not in list(add_results.values())+["pointList2Windows"]: # remove all ..._type method(s)
+      f.write(f"{k.ljust(size_snake_word)} = I.{v.ljust(size_camel_word)};  {v.ljust(size_camel_word)} = I.{v};\n")
   f.write(f"\n")
   f.write(f"# Additional(s)\n")
   for k, v in add_results.items():
-    f.write(f"{k.ljust(size_word)} = {v}\n")
+    f.write(f"{k.ljust(size_snake_word)} = I.{v.ljust(size_camel_word)};  {v.ljust(size_camel_word)} = I.{v};\n")
 
