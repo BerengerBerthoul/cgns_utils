@@ -566,7 +566,7 @@ def set_value(node: TreeNode, value=None) -> NoReturn:
                 for num, item in enumerate(value):
                     size = min(len(item), 32)
                     arr[:, num] = b" "
-                    arr[0:size, num] = item[0:size]
+                    arr[0:size, num] = str_to_ascii_array(item)[0:size]
                 node[__DATA__] = arr
             elif isinstance(value[0], (list, tuple)):
                 arr = numpy.empty(
@@ -576,7 +576,7 @@ def set_value(node: TreeNode, value=None) -> NoReturn:
                     for num, item in enumerate(group):
                         size = min(len(item), 32)
                         arr[:, num, gid] = b" "
-                        arr[0:size, num, gid] = item[0:size]
+                        arr[0:size, num, gid] = str_to_ascii_array(item)[0:size]
                 node[__DATA__] = arr
     else:
         node[__DATA__] = numpy.array([value])
